@@ -1,0 +1,17 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["> 2% in US"],
+        "node": "current"
+      },
+      "exclude": ["transform-regenerator", "transform-async-to-generator"]
+    }],
+    "react"
+  ],
+  "plugins": [
+    "transform-object-rest-spread",
+    ["transform-class-properties", { "spec": true }],
+    ["fast-async", { "spec":true }]
+  ]
+}

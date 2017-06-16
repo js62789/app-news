@@ -1,0 +1,52 @@
+{
+  "name": "app-news",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/server.bundle.js",
+    "dev": "webpack -w",
+    "build": "webpack",
+    "docker": "npm run docker:build && npm run docker:run",
+    "docker:build": "docker build -t news_webapp .",
+    "docker:run": "docker run -it --rm -p 3002:3002 --name=news_webapp news_webapp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.5.1",
+    "babel-preset-react": "^6.24.1",
+    "config": "^1.25.1",
+    "css-loader": "^0.28.3",
+    "express": "^4.15.2",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "fast-async": "^6.2.2",
+    "isomorphic-fetch": "^2.2.1",
+    "lib-react-components": "js62789/lib-react-components#master",
+    "postcss-cssnext": "^2.11.0",
+    "postcss-import": "^10.0.0",
+    "postcss-loader": "^2.0.6",
+    "prop-types": "^15.5.10",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.5",
+    "react-router-dom": "^4.1.1",
+    "redux": "^3.6.0",
+    "style-loader": "^0.18.1",
+    "webpack": "^2.6.0",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-react": "^7.1.0"
+  }
+}
