@@ -1,5 +1,6 @@
 {
   "port": 3001,
   "browsers": ["last 2 versions", "> 5%"],
-  "newsApi": "http://localhost:3002/v1"
+  "newsApi": "http://localhost:3002/v1",
+  "hot": true
 }

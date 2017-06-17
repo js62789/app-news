@@ -6,7 +6,18 @@ import render from './render';
 const PORT = config.get('port');
 const app = express();
 
-app.use(express.static('dist'));
+if (config.get('hot')) {
+  const webpack = require('webpack'); // eslint-disable-line global-require
+  const webpackConfig = require('../webpack.config.js'); // eslint-disable-line global-require
+  const compiler = webpack(webpackConfig[0]);
+  const webpackDevMiddleware = require('webpack-dev-middleware'); // eslint-disable-line global-require
+  const webpackHotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line global-require
+
+  app.use(webpackDevMiddleware(compiler));
+  app.use(webpackHotMiddleware(compiler));
+} else {
+  app.use(express.static('dist'));
+}
 
 app.use('/sources/:source/articles', (req, res, next) => {
   fetch(`http://localhost:3002/v1/sources/${req.params.source}/articles`)

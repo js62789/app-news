@@ -34,8 +34,12 @@ const clientConfig = {
     rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader'
-      }
+        loaders: ['babel-loader'],
+        include: [
+          path.resolve('./src'),
+          path.resolve('./node_modules/lib-react-components'),
+        ],
+      },
     ],
   },
 
@@ -76,6 +80,8 @@ if (isProd) {
     },
   }));
 } else {
+  clientConfig.entry.client.unshift('webpack-hot-middleware/client');
+  clientConfig.module.rules[0].loaders.unshift('react-hot-loader');
   clientConfig.module.rules.push({
     test: /\.css$/,
     use: [
@@ -86,10 +92,11 @@ if (isProd) {
           modules: true,
         },
       },
-      'postcss-loader'
+      'postcss-loader',
     ],
   });
   clientConfig.devtool = 'inline-source-map';
+  clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 const serverConfig = {
@@ -99,7 +106,7 @@ const serverConfig = {
   target: 'node',
 
   externals: [nodeExternals({
-    whitelist: ['lib-react-components']
+    whitelist: ['lib-react-components'],
   })],
 
   entry: {
@@ -120,15 +127,19 @@ const serverConfig = {
     rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        include: [
+          path.resolve('./src'),
+          path.resolve('./node_modules/lib-react-components'),
+        ],
       },
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader?modules&importLoaders=1!postcss-loader'
+          use: 'css-loader?modules&importLoaders=1!postcss-loader',
         }),
-      }
+      },
     ],
   },
 
@@ -136,7 +147,7 @@ const serverConfig = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
-    new ExtractTextPlugin('bundle.css')
+    new ExtractTextPlugin('bundle.css'),
   ],
 
 };

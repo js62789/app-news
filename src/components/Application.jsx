@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import fetch from 'isomorphic-fetch';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
-import { Container, ListGroup } from 'lib-react-components';
+import { Container, ListGroup, Flex, Header, Text } from 'lib-react-components';
 
 class Application extends React.Component {
   static propTypes = {
@@ -27,9 +27,15 @@ class Application extends React.Component {
         <Route
           path="/sources/:source/articles"
           render={() => (
-            <ListGroup>
+            <ListGroup as="div">
               {articles.map(article => (
-                <ListGroup.Item key={article.guid}>{article.title}</ListGroup.Item>
+                <ListGroup.Item key={article.guid} as="a" href={article.link} action>
+                  <Flex justifyContent="between">
+                    <Header>{article.title}</Header>
+                    <Text small>Published: {article.pubdate}</Text>
+                  </Flex>
+                  <Text>{article.description}</Text>
+                </ListGroup.Item>
               ))}
             </ListGroup>
           )}
