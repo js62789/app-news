@@ -2,10 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import fetch from 'isomorphic-fetch';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
-import { Container, ListGroup, Flex, Header, Text } from 'lib-react-components';
+import { Route, Switch } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import { Container } from 'lib-react-components';
+import { ArticleList, SourceList, Navbar } from './';
 
-class Application extends React.Component {
+const sources = [
+  {
+    id: 1,
+    name: 'New York Times',
+    key: 'nytimes',
+  },
+];
+
+export class Application extends React.Component {
   static propTypes = {
     articles: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string,
@@ -21,26 +31,28 @@ class Application extends React.Component {
     }
   }
   render() {
-    const { articles } = this.props;
     return (
-      <Container>
-        <Route
-          path="/sources/:source/articles"
-          render={() => (
-            <ListGroup as="div">
-              {articles.map(article => (
-                <ListGroup.Item key={article.guid} as="a" href={article.link} action>
-                  <Flex justifyContent="between">
-                    <Header>{article.title}</Header>
-                    <Text small>Published: {article.pubdate}</Text>
-                  </Flex>
-                  <Text>{article.description}</Text>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-          )}
-        />
-      </Container>
+      <div>
+        <Navbar />
+        <Container>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => <div>Home</div>}
+            />
+            <Route
+              exact
+              path="/sources"
+              render={() => <SourceList sources={sources} />}
+            />
+            <Route
+              path="/sources/:source/articles"
+              render={() => <ArticleList articles={this.props.articles} />}
+            />
+          </Switch>
+        </Container>
+      </div>
     );
   }
 }
@@ -67,4 +79,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Application);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Application));

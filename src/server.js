@@ -15,9 +15,9 @@ if (config.get('hot')) {
 
   app.use(webpackDevMiddleware(compiler));
   app.use(webpackHotMiddleware(compiler));
-} else {
-  app.use(express.static('dist'));
 }
+
+app.use(express.static('dist'));
 
 app.use('/sources/:source/articles', (req, res, next) => {
   fetch(`http://localhost:3002/v1/sources/${req.params.source}/articles`)
