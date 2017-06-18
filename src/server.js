@@ -4,6 +4,7 @@ import fetch from 'isomorphic-fetch';
 import render from './render';
 
 const PORT = config.get('port');
+const API = config.get('newsApi');
 const app = express();
 
 if (config.get('hot')) {
@@ -19,20 +20,43 @@ if (config.get('hot')) {
 
 app.use(express.static('dist'));
 
-app.use('/sources/:source/articles', (req, res, next) => {
-  fetch(`http://localhost:3002/v1/sources/${req.params.source}/articles`)
-    .then((articlesResponse) => {
-      return articlesResponse.json()
-        .then((body) => {
-          req.initialState = {
-            articles: {
-              isFetchingArticles: false,
-              articles: body.articles,
-            },
-          };
-          next();
-        });
-    });
+app.use('/sources', async (req, res, next) => {
+  const sourcesResponse = await fetch(`${API}/sources`);
+  const body = await sourcesResponse.json();
+
+  req.initialState = {
+    ...req.initialState,
+    sources: {
+      isFetchingSources: false,
+      sources: body.sources,
+    },
+  };
+
+  next();
+});
+
+app.use('/sources/:source/articles', async (req, res, next) => {
+  const articlesResponse = await fetch(`${API}/sources/${req.params.source}/articles`);
+  const body = await articlesResponse.json();
+
+  const articlesByGuid = {};
+
+  body.articles.forEach(a => {
+    articlesByGuid[a.guid] = a;
+  });
+
+  req.initialState = {
+    ...req.initialState,
+    articles: {
+      isFetchingArticles: false,
+      articlesByGuid,
+      guidsBySource: {
+        [req.params.source]: body.articles.map(a => a.guid),
+      },
+    },
+  };
+
+  next();
 });
 
 app.use(render);
