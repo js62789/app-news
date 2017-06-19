@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import fetch from 'isomorphic-fetch';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { Header } from 'lib-react-components';
+import { Header, Image } from 'lib-react-components';
 import { ArticleList } from './';
 
 const API = 'http://localhost:3002/v1';
@@ -29,7 +29,7 @@ class SourceArticlesComponent extends React.Component {
     const { source } = this.props;
     return (
       <div>
-        <Header>{source.name}</Header>
+        <Image src={source.logo} alt={source.name} />
         <ArticleList />
       </div>
     );
