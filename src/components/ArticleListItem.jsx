@@ -6,7 +6,10 @@ export const ArticleListItem = ({ article }) => (
   <ListGroup.Item key={article.guid} as="a" href={article.link} target="_blank" action>
     <Flex alignItems="start" direction="column">
       <Header>{article.title}</Header>
-      <Text small>{(new Date(article.pubdate)).toDateString()} by {article.author}</Text>
+      <Text small>
+        {article.pubdate && <span>{(new Date(article.pubdate)).toDateString()}</span>}
+        <span>by {article.author}</span>
+      </Text>
       <Text>{article.description.replace(/<\/?[^>]+(>|$)/g, '')}</Text>
     </Flex>
   </ListGroup.Item>
