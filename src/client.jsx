@@ -15,6 +15,12 @@ delete window.__PRELOADED_STATE__;
 // Create Redux store with initial state
 const store = createStore(reactApp, preloadedState);
 
+if (module.hot) {
+  module.hot.accept('./reducers', () => {
+    store.replaceReducer(require('./reducers').default);
+  });
+}
+
 const render = (Component) => {
   ReactDOM.render(
     <Provider store={store}>
