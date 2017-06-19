@@ -20,28 +20,42 @@ if (config.get('hot')) {
 
 app.use(express.static('dist'));
 
-app.use('/sources', async (req, res, next) => {
+app.get('/sources', async (req, res, next) => {
   const sourcesResponse = await fetch(`${API}/sources`);
   const body = await sourcesResponse.json();
+
+  const sourcesByKey = {};
+
+  body.sources.forEach((source) => {
+    sourcesByKey[source.key] = source;
+  });
 
   req.initialState = {
     ...req.initialState,
     sources: {
       isFetchingSources: false,
-      sources: body.sources,
+      hasFetchedAll: true,
+      sourcesByKey,
     },
   };
 
   next();
 });
 
-app.use('/sources/:source/articles', async (req, res, next) => {
-  const articlesResponse = await fetch(`${API}/sources/${req.params.source}/articles`);
-  const body = await articlesResponse.json();
-
+app.get('/sources/:source/articles', async (req, res, next) => {
+  const sourceKey = req.params.source;
+  const sourcesResponse = await fetch(`${API}/sources/${sourceKey}`);
+  const articlesResponse = await fetch(`${API}/sources/${sourceKey}/articles`);
+  const sourcesBody = await sourcesResponse.json();
+  const articlesBody = await articlesResponse.json();
+  const sourcesByKey = {};
   const articlesByGuid = {};
 
-  body.articles.forEach(a => {
+  sourcesBody.sources.forEach((source) => {
+    sourcesByKey[source.key] = source;
+  });
+
+  articlesBody.articles.forEach((a) => {
     articlesByGuid[a.guid] = a;
   });
 
@@ -51,8 +65,13 @@ app.use('/sources/:source/articles', async (req, res, next) => {
       isFetchingArticles: false,
       articlesByGuid,
       guidsBySource: {
-        [req.params.source]: body.articles.map(a => a.guid),
+        [sourceKey]: articlesBody.articles.map(a => a.guid),
       },
+    },
+    sources: {
+      isFetchingSources: false,
+      hasFetchedAll: false,
+      sourcesByKey,
     },
   };
 

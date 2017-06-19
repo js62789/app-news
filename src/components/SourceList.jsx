@@ -10,7 +10,7 @@ const API = 'http://localhost:3002/v1';
 
 class SourceListComponent extends React.Component {
   static propTypes = {
-    isFetchingSources: PropTypes.bool.isRequired,
+    hasFetchedAll: PropTypes.bool.isRequired,
     sources: PropTypes.arrayOf(PropTypes.shape({
       key: PropTypes.string,
       name: PropTypes.string,
@@ -18,7 +18,7 @@ class SourceListComponent extends React.Component {
     fetchSources: PropTypes.func.isRequired,
   }
   componentDidMount() {
-    if (!this.props.sources.length && !this.props.isFetchingSources) {
+    if (!this.props.hasFetchedAll) {
       this.props.fetchSources();
     }
   }
@@ -36,10 +36,14 @@ class SourceListComponent extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  isFetchingSources: state.sources.isFetchingSources,
-  sources: state.sources.sources,
-});
+const mapStateToProps = (state) => {
+  const sourcesByKey = state.sources.sourcesByKey;
+  const sources = Object.keys(sourcesByKey).map(key => sourcesByKey[key]);
+  return {
+    hasFetchedAll: state.sources.hasFetchedAll,
+    sources,
+  };
+};
 
 const mapDispatchToProps = dispatch => ({
   fetchSources: async () => {
