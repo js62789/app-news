@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/server.bundle.js",
-    "dev": "webpack -w",
     "build": "webpack",
     "docker": "npm run docker:build && npm run docker:run",
     "docker:build": "docker build -t news_webapp .",
