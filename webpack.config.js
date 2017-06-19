@@ -55,7 +55,7 @@ if (isProd) {
   clientConfig.devtool = 'cheap-source-map';
   clientConfig.module.rules.push({
     test: /\.css$/,
-    loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader?modules&importLoaders=1!postcss-loader' }),
+    loader: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader' }),
   });
   clientConfig.plugins.push(new ExtractTextPlugin('bundle.css'));
   clientConfig.plugins.push(new webpack.LoaderOptionsPlugin({
@@ -90,6 +90,8 @@ if (isProd) {
         loader: 'css-loader',
         options: {
           modules: true,
+          importLoaders: 1,
+          localIdentName: '[name]__[local]___[hash:base64:5]',
         },
       },
       'postcss-loader',
@@ -137,7 +139,7 @@ const serverConfig = {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader?modules&importLoaders=1!postcss-loader',
+          use: 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader',
         }),
       },
     ],
