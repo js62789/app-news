@@ -11,6 +11,7 @@ const API = 'http://localhost:3002/v1';
 class SourceListComponent extends React.Component {
   static propTypes = {
     hasFetchedAll: PropTypes.bool.isRequired,
+    isFetchingSources: PropTypes.bool.isRequired,
     sources: PropTypes.arrayOf(PropTypes.shape({
       key: PropTypes.string,
       name: PropTypes.string,
@@ -23,9 +24,9 @@ class SourceListComponent extends React.Component {
     }
   }
   render() {
-    const { sources } = this.props;
+    const { sources, isFetchingSources } = this.props;
     return (
-      <ListGroup as="div">
+      <ListGroup as="div" loading={isFetchingSources}>
         {sources.map(source => (
           <ListGroup.Item key={source.key} as={Link} to={`/sources/${source.key}/articles`} action>
             <Header>{source.name}</Header>
@@ -37,10 +38,11 @@ class SourceListComponent extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const sourcesByKey = state.sources.sourcesByKey;
+  const { hasFetchedAll, isFetchingSources, sourcesByKey } = state.sources;
   const sources = Object.keys(sourcesByKey).map(key => sourcesByKey[key]);
   return {
-    hasFetchedAll: state.sources.hasFetchedAll,
+    hasFetchedAll,
+    isFetchingSources,
     sources,
   };
 };

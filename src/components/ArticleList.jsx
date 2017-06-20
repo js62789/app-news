@@ -29,9 +29,9 @@ class ArticleListComponent extends React.Component {
     }
   }
   render() {
-    const { articles } = this.props;
+    const { isFetchingArticles, articles } = this.props;
     return (
-      <ListGroup as="div">
+      <ListGroup as="div" loading={isFetchingArticles}>
         {articles.map(article => <ArticleListItem key={article.guid} article={article} />)}
       </ListGroup>
     );
