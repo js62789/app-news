@@ -3,10 +3,10 @@ import { Route, Switch } from 'react-router-dom';
 import { Container } from 'lib-react-components';
 import { SourceArticles, SourceList, Navbar } from './';
 
-export const Application = () => (
+const Application = () => (
   <div>
     <Navbar />
-    <Container>
+    <Container style={{ paddingTop: 60 }}>
       <Switch>
         <Route
           exact

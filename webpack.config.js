@@ -81,7 +81,7 @@ if (isProd) {
   }));
 } else {
   clientConfig.entry.client.unshift('webpack-hot-middleware/client');
-  clientConfig.module.rules[0].loaders.unshift('react-hot-loader');
+  clientConfig.entry.client.unshift('react-hot-loader/patch');
   clientConfig.module.rules.push({
     test: /\.css$/,
     use: [

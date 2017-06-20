@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { AppContainer } from 'react-hot-loader';
 import Application from './components/Application';
 import reactApp from './reducers';
 
@@ -17,19 +18,29 @@ const store = createStore(reactApp, preloadedState);
 
 if (module.hot) {
   module.hot.accept('./reducers', () => {
+    // eslint-disable-next-line global-require
     store.replaceReducer(require('./reducers').default);
   });
 }
 
 const render = (Component) => {
   ReactDOM.render(
-    <Provider store={store}>
-      <Router>
-        <Component />
-      </Router>
-    </Provider>,
+    <AppContainer>
+      <Provider store={store}>
+        <Router>
+          <Component />
+        </Router>
+      </Provider>
+    </AppContainer>,
     document.getElementById('root'),
   );
 };
 
 render(Application);
+
+if (module.hot) {
+  module.hot.accept('./components/Application', () => {
+    // eslint-disable-next-line global-require
+    render(require('./components/Application').default);
+  });
+}
