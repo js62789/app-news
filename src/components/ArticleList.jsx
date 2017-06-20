@@ -40,9 +40,22 @@ class ArticleListComponent extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   const articleGuids = state.articles.guidsBySource[ownProps.match.params.source] || [];
+
+  const sortByDate = (a, b) => {
+    const aValue = (new Date(a.date)).getTime();
+    const bValue = (new Date(b.date)).getTime();
+    if (aValue < bValue) {
+      return 1;
+    }
+    if (aValue > bValue) {
+      return -1;
+    }
+    return 0;
+  };
+
   return {
     isFetchingArticles: state.articles.isFetchingArticles,
-    articles: articleGuids.map(guid => state.articles.articlesByGuid[guid]),
+    articles: articleGuids.map(guid => state.articles.articlesByGuid[guid]).sort(sortByDate),
   };
 };
 
