@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AppContainer } from 'react-hot-loader';
 import Application from './components/Application';
 import reactApp from './reducers';
 
@@ -25,13 +24,11 @@ if (module.hot) {
 
 const render = (Component) => {
   ReactDOM.render(
-    <AppContainer>
-      <Provider store={store}>
-        <Router>
-          <Component />
-        </Router>
-      </Provider>
-    </AppContainer>,
+    <Provider store={store}>
+      <Router>
+        <Component />
+      </Router>
+    </Provider>,
     document.getElementById('root'),
   );
 };

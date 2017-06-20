@@ -81,7 +81,6 @@ if (isProd) {
   }));
 } else {
   clientConfig.entry.client.unshift('webpack-hot-middleware/client');
-  clientConfig.entry.client.unshift('react-hot-loader/patch');
   clientConfig.module.rules.push({
     test: /\.css$/,
     use: [
@@ -99,6 +98,8 @@ if (isProd) {
   });
   clientConfig.devtool = 'inline-source-map';
   clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  clientConfig.plugins.push(new webpack.NoEmitOnErrorsPlugin());
+  clientConfig.plugins.push(new webpack.NamedModulesPlugin());
 }
 
 const serverConfig = {
