@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import fetch from 'isomorphic-fetch';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { ListGroup } from 'lib-react-components';
-import ArticleListItem from './ArticleListItem';
+import { ListGroup, Card } from 'lib-react-components';
+import { ArticleListItem, ArticleCardItem } from './';
 
 const API = 'http://localhost:3002/v1';
 
@@ -28,13 +28,24 @@ class ArticleListComponent extends React.Component {
       this.props.fetchArticles(this.props.match.params.source);
     }
   }
-  render() {
+  renderList() {
     const { isFetchingArticles, articles } = this.props;
     return (
       <ListGroup as="div" loading={isFetchingArticles}>
         {articles.map(article => <ArticleListItem key={article.guid} article={article} />)}
       </ListGroup>
     );
+  }
+  renderBoard() {
+    const { articles } = this.props;
+    return (
+      <Card.Columns>
+        {articles.map(article => <ArticleCardItem key={article.guid} article={article} />)}
+      </Card.Columns>
+    );
+  }
+  render() {
+    return this.renderBoard();
   }
 }
 
@@ -64,7 +75,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({
       type: 'ARTICLES_FETCH',
     });
-    const articlesResponse = await fetch(`${API}/sources/${source}/articles`);
+    const articlesResponse = await fetch(`${API}/sources/${source}/articles?limit=10`);
     const body = await articlesResponse.json();
     dispatch({
       type: 'ARTICLES_FETCH_SUCCESS',

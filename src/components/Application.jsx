@@ -4,7 +4,7 @@ import { Container } from 'lib-react-components';
 import { SourceArticles, SourceList, Navbar } from './';
 
 const Application = () => (
-  <div>
+  <div style={{ backgroundColor: '#eee' }}>
     <Navbar />
     <Container style={{ paddingTop: 60 }}>
       <Switch>
