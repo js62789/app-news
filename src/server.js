@@ -78,6 +78,28 @@ app.get('/sources/:source/articles', async (req, res, next) => {
   next();
 });
 
+app.get('/articles/:article_id', async (req, res, next) => {
+  const guid = req.params.article_id;
+  const articlesResponse = await fetch(`${API}/articles/${encodeURIComponent(guid)}`);
+  const articlesBody = await articlesResponse.json();
+  const articlesByGuid = {};
+
+  articlesBody.articles.forEach((a) => {
+    articlesByGuid[a.guid] = a;
+  });
+
+  req.initialState = {
+    ...req.initialState,
+    articles: {
+      isFetchingArticles: false,
+      articlesByGuid,
+      guidsBySource: {},
+    },
+  };
+
+  next();
+});
+
 app.use(render);
 
 // eslint-disable-next-line no-unused-vars

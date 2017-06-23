@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import fromNow from 'mininow';
+import { Link } from 'react-router-dom';
 import { ListGroup, Flex, Header, Text } from 'lib-react-components';
 
 export const ArticleListItem = ({ article }) => (
-  <ListGroup.Item key={article.guid} as="a" href={article.link} target="_blank" action>
+  <ListGroup.Item key={article.guid} as={Link} to={`/articles/${encodeURIComponent(article.guid)}`} action>
     <Flex alignItems="start" direction="column">
       <Header as="h2">{article.title}</Header>
       <Text small>

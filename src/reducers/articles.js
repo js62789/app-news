@@ -17,7 +17,10 @@ export default (state = defaultState, action) => {
 
     case 'ARTICLES_FETCH_SUCCESS':
       payload.body.articles.forEach((a) => {
-        articlesByGuid[a.guid] = a;
+        articlesByGuid[a.guid] = {
+          ...articlesByGuid[a.guid],
+          ...a,
+        };
       });
       return {
         ...state,

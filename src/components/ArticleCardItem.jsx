@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { Card, Flex } from 'lib-react-components';
 
 export const ArticleCardItem = ({ article }) => (
@@ -9,7 +10,7 @@ export const ArticleCardItem = ({ article }) => (
     }
     <Card.Block>
       <Flex direction="column">
-        <Card.Title as="a" href={article.link} target="_blank">{article.title}</Card.Title>
+        <Card.Title as={Link} to={`/articles/${encodeURIComponent(article.guid)}`}>{article.title}</Card.Title>
         <Card.Text small>
           {article.pubdate && <span>{(new Date(article.date)).toDateString()} </span>}
           <span>by {article.author}</span>

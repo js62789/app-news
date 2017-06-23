@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Container } from 'lib-react-components';
-import { SourceArticles, SourceList, Navbar } from './';
+import { SourceArticles, SourceList, Navbar, Article } from './';
 
 const Application = () => (
   <div style={{ backgroundColor: '#eee' }}>
@@ -21,6 +21,10 @@ const Application = () => (
         <Route
           path="/sources/:source/articles"
           render={() => <SourceArticles />}
+        />
+        <Route
+          path="/articles/:article_id"
+          render={() => <Article />}
         />
       </Switch>
     </Container>
