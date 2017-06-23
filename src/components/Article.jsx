@@ -10,6 +10,7 @@ const API = 'http://localhost:3002/v1';
 
 class ArticleComponent extends React.Component {
   static propTypes = {
+    guid: PropTypes.string.isRequired,
     isFetchingArticles: PropTypes.bool.isRequired,
     article: PropTypes.shape({
       content: PropTypes.string,
@@ -20,8 +21,9 @@ class ArticleComponent extends React.Component {
     article: null,
   }
   componentDidMount() {
-    if ((!this.props.article || !this.props.article.content) && !this.props.isFetchingArticles) {
-      this.props.fetchArticle();
+    const guid = this.props.guid;
+    if (guid && (!this.props.article || !this.props.article.content) && !this.props.isFetchingArticles) {
+      this.props.fetchArticle(guid);
     }
   }
   render() {
@@ -32,7 +34,12 @@ class ArticleComponent extends React.Component {
         <article className={styles.article}>
           <Header>{article.title}</Header>
           <Text muted>by {article.author}</Text>
-          {article && <div className={styles.articleContent} dangerouslySetInnerHTML={{ __html: article.content }} />}
+          {article &&
+            <div
+              className={styles.articleContent}
+              dangerouslySetInnerHTML={{ __html: article.content }}
+            />
+          }
         </article>
       </div>
     );
@@ -42,17 +49,18 @@ class ArticleComponent extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   const guid = decodeURIComponent(ownProps.match.params.article_id);
   return {
+    guid,
     isFetchingArticles: state.articles.isFetchingArticles,
     article: state.articles.articlesByGuid[guid],
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchArticle: async () => {
+const mapDispatchToProps = dispatch => ({
+  fetchArticle: async (guid) => {
     dispatch({
       type: 'ARTICLES_FETCH',
     });
-    const sourceResponse = await fetch(`${API}/articles/${ownProps.match.params.article_id}`);
+    const sourceResponse = await fetch(`${API}/articles/${encodeURIComponent(guid)}`);
     const body = await sourceResponse.json();
     dispatch({
       type: 'ARTICLES_FETCH_SUCCESS',
