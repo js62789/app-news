@@ -10,47 +10,66 @@ const API = 'http://localhost:3002/v1';
 
 class ArticleListComponent extends React.Component {
   static propTypes = {
+    showSummary: PropTypes.bool,
+    source: PropTypes.string.isRequired,
     isFetchingArticles: PropTypes.bool.isRequired,
     articles: PropTypes.arrayOf(PropTypes.shape({
       title: PropTypes.string,
     })).isRequired,
     fetchArticles: PropTypes.func.isRequired,
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        source: PropTypes.string,
-      }).isRequired,
-      path: PropTypes.string.isRequired,
-    }).isRequired,
   }
+  static defaultProps = {
+    showSummary: false,
+  }
+  state = { fetchInterval: null }
   componentDidMount() {
-    const source = this.props.match.params.source;
+    const source = this.props.source;
     if (source && !this.props.articles.length && !this.props.isFetchingArticles) {
-      this.props.fetchArticles(this.props.match.params.source);
+      this.props.fetchArticles(source);
+      this.updateEvery(5 * 60 * 1000);
     }
   }
+  updateEvery(interval) {
+    const { source, fetchArticles } = this.props;
+    const fetchInterval = setInterval(fetchArticles.bind(this, source), interval);
+    if (this.state.fetchInterval) {
+      clearInterval(this.state.fetchInterval);
+    }
+    this.setState({ fetchInterval });
+  }
   renderList() {
-    const { isFetchingArticles, articles } = this.props;
+    const { isFetchingArticles, articles, source, showSummary } = this.props;
     return (
-      <ListGroup as="div" loading={isFetchingArticles}>
-        {articles.map(article => <ArticleListItem key={article.guid} article={article} />)}
+      <ListGroup as="div" loading={isFetchingArticles && !articles.length}>
+        {articles.map(article => (
+          <ArticleListItem
+            key={article.guid}
+            article={article}
+            source={source}
+            showSummary={showSummary}
+          />
+        ))}
       </ListGroup>
     );
   }
   renderBoard() {
-    const { articles } = this.props;
+    const { articles, source } = this.props;
     return (
       <Card.Columns>
-        {articles.map(article => <ArticleCardItem key={article.guid} article={article} />)}
+        {articles.map(article => (
+          <ArticleCardItem key={article.guid} article={article} source={source} />
+        ))}
       </Card.Columns>
     );
   }
   render() {
-    return this.renderBoard();
+    return this.renderList();
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const articleGuids = state.articles.guidsBySource[ownProps.match.params.source] || [];
+  const source = ownProps.match.params.source;
+  const articleGuids = state.articles.guidsBySource[source] || [];
 
   const sortByDate = (a, b) => {
     const aValue = (new Date(a.date)).getTime();
@@ -65,6 +84,7 @@ const mapStateToProps = (state, ownProps) => {
   };
 
   return {
+    source,
     isFetchingArticles: state.articles.isFetchingArticles,
     articles: articleGuids.map(guid => state.articles.articlesByGuid[guid]).sort(sortByDate),
   };

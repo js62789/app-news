@@ -38,7 +38,7 @@ router.get('*', async (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="/bundle.css" />
       </head>
-      <body>
+      <body style="height: 100vh;">
         <div id="root">${html}</div>
         <script>
           // WARNING: See the following for security issues around embedding JSON in HTML:
