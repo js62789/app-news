@@ -4,6 +4,7 @@ import fetch from 'isomorphic-fetch';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Header, Text } from 'lib-react-components';
+import styles from '../styles.css';
 
 const API = 'http://localhost:3002/v1';
 
@@ -11,7 +12,7 @@ class ArticleComponent extends React.Component {
   static propTypes = {
     isFetchingArticles: PropTypes.bool.isRequired,
     article: PropTypes.shape({
-      content: PropTypes.string.isRequired,
+      content: PropTypes.string,
     }),
     fetchArticle: PropTypes.func.isRequired,
   }
@@ -27,9 +28,12 @@ class ArticleComponent extends React.Component {
     const { article } = this.props;
     return (
       <div>
-        <Header>{article.title}</Header>
-        <Text muted>by {article.author}</Text>
-        {article && <div dangerouslySetInnerHTML={{ __html: article.content }} />}
+        <div className={styles.articleBanner} style={{ backgroundImage: `url(${article.image})` }} />
+        <article className={styles.article}>
+          <Header>{article.title}</Header>
+          <Text muted>by {article.author}</Text>
+          {article && <div className={styles.articleContent} dangerouslySetInnerHTML={{ __html: article.content }} />}
+        </article>
       </div>
     );
   }

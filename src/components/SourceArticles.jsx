@@ -30,7 +30,7 @@ class SourceArticlesComponent extends React.Component {
     return (
       <div>
         <Image src={source.logo} alt={source.name} height={80} />
-        <ArticleList />
+        <ArticleList showSummary />
       </div>
     );
   }

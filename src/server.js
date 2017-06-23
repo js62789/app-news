@@ -100,6 +100,47 @@ app.get('/articles/:article_id', async (req, res, next) => {
   next();
 });
 
+app.get('/sources/:source/articles/:article_id', async (req, res, next) => {
+  const guid = req.params.article_id;
+  const sourceKey = req.params.source;
+  const articleResponse = await fetch(`${API}/articles/${encodeURIComponent(guid)}`);
+  const sourcesResponse = await fetch(`${API}/sources/${sourceKey}`);
+  const articlesResponse = await fetch(`${API}/sources/${sourceKey}/articles`);
+  const articleBody = await articleResponse.json();
+  const sourcesBody = await sourcesResponse.json();
+  const articlesBody = await articlesResponse.json();
+  const sourcesByKey = {};
+  const articlesByGuid = {};
+
+  sourcesBody.sources.forEach((source) => {
+    sourcesByKey[source.key] = source;
+  });
+
+  articlesBody.articles.forEach((a) => {
+    articlesByGuid[a.guid] = a;
+  });
+
+  Object.assign(articlesByGuid[guid], articleBody);
+
+  req.initialState = {
+    ...req.initialState,
+    articles: {
+      isFetchingArticles: false,
+      articlesByGuid,
+      guidsBySource: {
+        [sourceKey]: articlesBody.articles.map(a => a.guid),
+      },
+    },
+    sources: {
+      isFetchingSources: false,
+      hasFetchedAll: false,
+      sourcesByKey,
+    },
+  };
+
+  next();
+});
+
 app.use(render);
 
 // eslint-disable-next-line no-unused-vars

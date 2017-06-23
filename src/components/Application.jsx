@@ -1,12 +1,12 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Container } from 'lib-react-components';
-import { SourceArticles, SourceList, Navbar, Article } from './';
+import { SourceArticles, SourceList, Navbar, Article, ArticleViewer } from './';
 
 const Application = () => (
-  <div style={{ backgroundColor: '#eee' }}>
+  <div>
     <Navbar />
-    <Container style={{ paddingTop: 60 }}>
+    <Container style={{ paddingTop: 56 }} fluid>
       <Switch>
         <Route
           exact
@@ -16,15 +16,22 @@ const Application = () => (
         <Route
           exact
           path="/sources"
-          render={() => <SourceList />}
+          render={() => <Container style={{ paddingTop: 100 }}><SourceList /></Container>}
         />
         <Route
+          exact
           path="/sources/:source/articles"
-          render={() => <SourceArticles />}
+          render={() => <Container style={{ paddingTop: 100 }}><SourceArticles /></Container>}
         />
         <Route
+          exact
           path="/articles/:article_id"
-          render={() => <Article />}
+          render={() => <Container style={{ paddingTop: 100 }}><Article /></Container>}
+        />
+        <Route
+          exact
+          path="/sources/:source/articles/:article_id"
+          render={() => <ArticleViewer />}
         />
       </Switch>
     </Container>
