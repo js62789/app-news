@@ -29,6 +29,11 @@ class ArticleListComponent extends React.Component {
       this.updateEvery(5 * 60 * 1000);
     }
   }
+  componentWillUnmount() {
+    if (this.state.fetchInterval) {
+      clearInterval(this.state.fetchInterval);
+    }
+  }
   updateEvery(interval) {
     const { source, fetchArticles } = this.props;
     const fetchInterval = setInterval(fetchArticles.bind(this, source), interval);
