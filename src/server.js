@@ -120,7 +120,7 @@ app.get('/sources/:source/articles/:article_id', async (req, res, next) => {
     articlesByGuid[a.guid] = a;
   });
 
-  Object.assign(articlesByGuid[guid], articleBody);
+  Object.assign(articlesByGuid[guid], articleBody.articles[0]);
 
   req.initialState = {
     ...req.initialState,
