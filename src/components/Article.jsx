@@ -22,8 +22,16 @@ class ArticleComponent extends React.Component {
   }
   componentDidMount() {
     const guid = this.props.guid;
-    if (guid && (!this.props.article || !this.props.article.content) && !this.props.isFetchingArticles) {
+    const articleContentMissing = !this.props.article || !this.props.article.content;
+    if (guid && articleContentMissing && !this.props.isFetchingArticles) {
       this.props.fetchArticle(guid);
+    }
+  }
+  componentWillUpdate(nextProps) {
+    const guidChanged = nextProps.guid !== this.props.guid;
+    const articleContentMissing = !nextProps.article || !nextProps.article.content;
+    if (guidChanged && articleContentMissing && !this.props.isFetchingArticles) {
+      this.props.fetchArticle(nextProps.guid);
     }
   }
   render() {
