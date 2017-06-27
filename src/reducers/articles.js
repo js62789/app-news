@@ -6,22 +6,29 @@ const defaultState = {
 
 export default (state = defaultState, action) => {
   const payload = action.payload;
-  const articlesByGuid = state.articlesByGuid;
+  const { articlesByGuid, guidsBySource } = state;
+  let articles;
+  let source;
 
   switch (action.type) {
+    case 'SOURCE_ARTICLES_FETCH':
     case 'ARTICLES_FETCH':
       return {
         ...state,
         isFetchingArticles: true,
       };
 
-    case 'ARTICLES_FETCH_SUCCESS':
-      payload.body.articles.forEach((a) => {
+    case 'SOURCE_ARTICLES_FETCH_SUCCESS':
+      articles = payload.body.articles;
+      source = payload.body.source;
+
+      articles.forEach((a) => {
         articlesByGuid[a.guid] = {
           ...articlesByGuid[a.guid],
           ...a,
         };
       });
+
       return {
         ...state,
         isFetchingArticles: false,
@@ -29,8 +36,26 @@ export default (state = defaultState, action) => {
           ...articlesByGuid,
         },
         guidsBySource: {
-          ...state.guidsBySource,
-          [payload.body.source]: payload.body.articles.map(a => a.guid),
+          ...guidsBySource,
+          [source]: (guidsBySource[source] || []).concat(articles.map(a => a.guid)),
+        },
+      };
+
+    case 'ARTICLES_FETCH_SUCCESS':
+      articles = payload.body.articles;
+
+      articles.forEach((a) => {
+        articlesByGuid[a.guid] = {
+          ...articlesByGuid[a.guid],
+          ...a,
+        };
+      });
+
+      return {
+        ...state,
+        isFetchingArticles: false,
+        articlesByGuid: {
+          ...articlesByGuid,
         },
       };
 

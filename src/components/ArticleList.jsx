@@ -14,19 +14,25 @@ class ArticleListComponent extends React.Component {
     source: PropTypes.string.isRequired,
     isFetchingArticles: PropTypes.bool.isRequired,
     articles: PropTypes.arrayOf(PropTypes.shape({
-      title: PropTypes.string,
+      title: PropTypes.string.isRequired,
+      guid: PropTypes.string.isRequired,
     })).isRequired,
     fetchArticles: PropTypes.func.isRequired,
   }
   static defaultProps = {
     showSummary: false,
   }
-  state = { fetchInterval: null }
+  state = { fetchInterval: null, limit: 10 }
   componentDidMount() {
     const source = this.props.source;
     if (source && !this.props.articles.length && !this.props.isFetchingArticles) {
-      this.props.fetchArticles(source);
-      this.updateEvery(5 * 60 * 1000);
+      this.updateArticles();
+    }
+    this.updateEvery(5 * 60 * 1000);
+  }
+  componentWillUnmount() {
+    if (this.state.fetchInterval) {
+      clearInterval(this.state.fetchInterval);
     }
   }
   componentWillUnmount() {
@@ -35,12 +41,18 @@ class ArticleListComponent extends React.Component {
     }
   }
   updateEvery(interval) {
-    const { source, fetchArticles } = this.props;
-    const fetchInterval = setInterval(fetchArticles.bind(this, source), interval);
+    const fetchInterval = setInterval(this.updateArticles, interval);
     if (this.state.fetchInterval) {
       clearInterval(this.state.fetchInterval);
     }
     this.setState({ fetchInterval });
+  }
+  updateArticles = () => {
+    const { source, articles } = this.props;
+    this.props.fetchArticles(source, {
+      after: articles[0] && articles[0].guid,
+      limit: this.state.limit,
+    });
   }
   renderList() {
     const { isFetchingArticles, articles, source, showSummary } = this.props;
@@ -77,8 +89,8 @@ const mapStateToProps = (state, ownProps) => {
   const articleGuids = state.articles.guidsBySource[source] || [];
 
   const sortByDate = (a, b) => {
-    const aValue = (new Date(a.date)).getTime();
-    const bValue = (new Date(b.date)).getTime();
+    const aValue = (new Date(a.pubdate)).getTime();
+    const bValue = (new Date(b.pubdate)).getTime();
     if (aValue < bValue) {
       return 1;
     }
@@ -96,14 +108,16 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchArticles: async (source) => {
+  fetchArticles: async (source, query) => {
     dispatch({
-      type: 'ARTICLES_FETCH',
+      type: 'SOURCE_ARTICLES_FETCH',
     });
-    const articlesResponse = await fetch(`${API}/sources/${source}/articles?limit=10`);
+    const queryString = query && Object.keys(query).map(key => `${key}=${query[key]}`).join('&');
+    const URL = `${API}/sources/${source}/articles${queryString ? `?${queryString}` : ''}`;
+    const articlesResponse = await fetch(URL);
     const body = await articlesResponse.json();
     dispatch({
-      type: 'ARTICLES_FETCH_SUCCESS',
+      type: 'SOURCE_ARTICLES_FETCH_SUCCESS',
       payload: {
         body,
       },

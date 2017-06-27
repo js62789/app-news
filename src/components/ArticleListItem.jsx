@@ -9,7 +9,7 @@ export const ArticleListItem = ({ source, article, showSummary }) => (
     <Flex alignItems="start" direction="column">
       <Header as="h2">{article.title}</Header>
       <Text small>
-        {article.date && <span>{fromNow(new Date(article.date))} </span>}
+        {article.pubdate && <span>{fromNow(new Date(article.pubdate))} </span>}
         <span>by {article.author}</span>
       </Text>
       {showSummary &&
