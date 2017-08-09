@@ -1,3 +1,10 @@
+import {
+  FETCH_SOURCE,
+  FETCH_SOURCES,
+  FETCH_SOURCE_SUCCESS,
+  FETCH_SOURCES_SUCCESS,
+} from '../actions';
+
 const defaultState = {
   isFetchingSources: false,
   hasFetchedAll: false,
@@ -8,22 +15,22 @@ export default (state = defaultState, action) => {
   const { sourcesByKey } = state;
 
   switch (action.type) {
-    case 'SOURCE_FETCH':
+    case FETCH_SOURCE:
       return {
         ...state,
         isFetchingSources: true,
       };
 
-    case 'SOURCES_FETCH':
+    case FETCH_SOURCES:
       return {
         ...state,
         isFetchingSources: true,
         hasFetchedAll: true,
       };
 
-    case 'SOURCE_FETCH_SUCCESS':
-    case 'SOURCES_FETCH_SUCCESS':
-      action.payload.body.sources.forEach((source) => {
+    case FETCH_SOURCE_SUCCESS:
+    case FETCH_SOURCES_SUCCESS:
+      action.payload.sources.forEach((source) => {
         sourcesByKey[source.key] = source;
       });
       return {

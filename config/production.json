@@ -1,3 +1,5 @@
 {
-  "hot": false
+  "log": {
+    "mode": "combined"
+  }
 }

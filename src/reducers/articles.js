@@ -1,7 +1,25 @@
+import {
+  FETCH_ARTICLES,
+  FETCH_ARTICLES_BY_SOURCE,
+  FETCH_ARTICLES_SUCCESS,
+  FETCH_ARTICLES_BY_SOURCE_SUCCESS,
+} from '../actions';
+
 const defaultState = {
   isFetchingArticles: false,
   articlesByGuid: {},
   guidsBySource: {},
+};
+
+const uniq = (arr) => {
+  const keys = {};
+  return arr.filter((item) => {
+    if (keys[item]) {
+      return false;
+    }
+    keys[item] = true;
+    return true;
+  });
 };
 
 export default (state = defaultState, action) => {
@@ -11,16 +29,16 @@ export default (state = defaultState, action) => {
   let source;
 
   switch (action.type) {
-    case 'SOURCE_ARTICLES_FETCH':
-    case 'ARTICLES_FETCH':
+    case FETCH_ARTICLES_BY_SOURCE:
+    case FETCH_ARTICLES:
       return {
         ...state,
         isFetchingArticles: true,
       };
 
-    case 'SOURCE_ARTICLES_FETCH_SUCCESS':
-      articles = payload.body.articles;
-      source = payload.body.source;
+    case FETCH_ARTICLES_BY_SOURCE_SUCCESS:
+      articles = payload.articles;
+      source = payload.source;
 
       articles.forEach((a) => {
         articlesByGuid[a.guid] = {
@@ -37,12 +55,12 @@ export default (state = defaultState, action) => {
         },
         guidsBySource: {
           ...guidsBySource,
-          [source]: (guidsBySource[source] || []).concat(articles.map(a => a.guid)),
+          [source]: uniq((guidsBySource[source] || []).concat(articles.map(a => a.guid))),
         },
       };
 
-    case 'ARTICLES_FETCH_SUCCESS':
-      articles = payload.body.articles;
+    case FETCH_ARTICLES_SUCCESS:
+      articles = payload.articles;
 
       articles.forEach((a) => {
         articlesByGuid[a.guid] = {

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import fetch from 'isomorphic-fetch';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Header, Text } from 'lib-react-components';
+import {
+  fetchArticle,
+} from '../actions';
 import styles from '../styles.css';
-
-const API = 'http://localhost:3002/v1';
 
 class ArticleComponent extends React.Component {
   static propTypes = {
@@ -65,17 +65,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchArticle: async (guid) => {
-    dispatch({
-      type: 'ARTICLES_FETCH',
-    });
-    const sourceResponse = await fetch(`${API}/articles/${encodeURIComponent(guid)}`);
-    const body = await sourceResponse.json();
-    dispatch({
-      type: 'ARTICLES_FETCH_SUCCESS',
-      payload: {
-        body,
-      },
-    });
+    dispatch(fetchArticle(guid));
   },
 });
 

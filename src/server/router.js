@@ -1,26 +1,11 @@
-import config from 'config';
 import express from 'express';
+import config from 'config';
 import fetch from 'isomorphic-fetch';
-import render from './render';
 
-const PORT = config.get('port');
 const API = config.get('newsApi');
-const app = express();
+const router = express.Router();
 
-if (config.get('hot')) {
-  const webpack = require('webpack'); // eslint-disable-line global-require
-  const webpackConfig = require('../webpack.config.js'); // eslint-disable-line global-require
-  const compiler = webpack(webpackConfig[0]);
-  const webpackDevMiddleware = require('webpack-dev-middleware'); // eslint-disable-line global-require
-  const webpackHotMiddleware = require('webpack-hot-middleware'); // eslint-disable-line global-require
-
-  app.use(webpackDevMiddleware(compiler));
-  app.use(webpackHotMiddleware(compiler));
-}
-
-app.use(express.static('dist'));
-
-app.get('/sources', async (req, res, next) => {
+router.get('/sources', async (req, res, next) => {
   const sourcesResponse = await fetch(`${API}/sources`);
   const body = await sourcesResponse.json();
 
@@ -42,7 +27,7 @@ app.get('/sources', async (req, res, next) => {
   next();
 });
 
-app.get('/sources/:source/articles', async (req, res, next) => {
+router.get('/sources/:source/articles', async (req, res, next) => {
   const sourceKey = req.params.source;
   const sourcesResponse = await fetch(`${API}/sources/${sourceKey}`);
   const articlesResponse = await fetch(`${API}/sources/${sourceKey}/articles`);
@@ -78,7 +63,7 @@ app.get('/sources/:source/articles', async (req, res, next) => {
   next();
 });
 
-app.get('/articles/:article_id', async (req, res, next) => {
+router.get('/articles/:article_id', async (req, res, next) => {
   const guid = req.params.article_id;
   const articlesResponse = await fetch(`${API}/articles/${encodeURIComponent(guid)}`);
   const articlesBody = await articlesResponse.json();
@@ -100,7 +85,7 @@ app.get('/articles/:article_id', async (req, res, next) => {
   next();
 });
 
-app.get('/sources/:source/articles/:article_id', async (req, res, next) => {
+router.get('/sources/:source/articles/:article_id', async (req, res, next) => {
   const guid = req.params.article_id;
   const sourceKey = req.params.source;
   const articleResponse = await fetch(`${API}/articles/${encodeURIComponent(guid)}`);
@@ -141,16 +126,11 @@ app.get('/sources/:source/articles/:article_id', async (req, res, next) => {
   next();
 });
 
-app.use(render);
-
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+router.use((err, req, res, next) => {
   res.status(err.code).send({
     error: err,
   });
 });
 
-app.listen(PORT, () => {
-// eslint-disable-next-line no-console
-  console.log(`Running on http://localhost:${PORT} in ${config.util.getEnv('NODE_ENV')}`);
-});
+export default router;

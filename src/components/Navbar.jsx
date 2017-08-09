@@ -11,7 +11,7 @@ export class Navbar extends React.Component {
   render() {
     const isOpen = this.state.isOpen;
     return (
-      <ReactNavbar toggleable="medium" fixed>
+      <ReactNavbar className="bg-inverse" toggleable="medium" fixed inverted>
         <ReactNavbar.Toggle onClick={this.handleToggleClick} open={isOpen} />
         <ReactNavbar.Menu open={isOpen}>
           <ReactNavbar.Brand href="/">News</ReactNavbar.Brand>

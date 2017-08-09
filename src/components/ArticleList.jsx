@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import fetch from 'isomorphic-fetch';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { ListGroup, Card } from 'lib-react-components';
 import { ArticleListItem, ArticleCardItem } from './';
-
-const API = 'http://localhost:3002/v1';
+import {
+  fetchArticlesBySource,
+} from '../actions';
 
 class ArticleListComponent extends React.Component {
   static propTypes = {
@@ -29,11 +29,6 @@ class ArticleListComponent extends React.Component {
       this.updateArticles();
     }
     this.updateEvery(5 * 60 * 1000);
-  }
-  componentWillUnmount() {
-    if (this.state.fetchInterval) {
-      clearInterval(this.state.fetchInterval);
-    }
   }
   componentWillUnmount() {
     if (this.state.fetchInterval) {
@@ -109,19 +104,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchArticles: async (source, query) => {
-    dispatch({
-      type: 'SOURCE_ARTICLES_FETCH',
-    });
-    const queryString = query && Object.keys(query).map(key => `${key}=${query[key]}`).join('&');
-    const URL = `${API}/sources/${source}/articles${queryString ? `?${queryString}` : ''}`;
-    const articlesResponse = await fetch(URL);
-    const body = await articlesResponse.json();
-    dispatch({
-      type: 'SOURCE_ARTICLES_FETCH_SUCCESS',
-      payload: {
-        body,
-      },
-    });
+    dispatch(fetchArticlesBySource(source, query));
   },
 });
 

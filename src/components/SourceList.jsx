@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import fetch from 'isomorphic-fetch';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { ListGroup, Header } from 'lib-react-components';
-
-const API = 'http://localhost:3002/v1';
+import {
+  fetchSources,
+} from '../actions';
 
 class SourceListComponent extends React.Component {
   static propTypes = {
@@ -49,17 +49,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => ({
   fetchSources: async () => {
-    dispatch({
-      type: 'SOURCES_FETCH',
-    });
-    const sourcesResponse = await fetch(`${API}/sources`);
-    const body = await sourcesResponse.json();
-    dispatch({
-      type: 'SOURCES_FETCH_SUCCESS',
-      payload: {
-        body,
-      },
-    });
+    dispatch(fetchSources());
   },
 });
 
