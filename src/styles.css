@@ -1,0 +1,44 @@
+.sidebar {
+  position: fixed;
+  top: 56px;
+  bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.mainContent {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.article {
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 740px;
+  text-rendering: optimizeLegibility;
+}
+
+.articleBanner {
+  height: 350px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.articleContent {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+
+/* TODO Do we want to show images? How should they look? */
+.article :global .image {
+  display: none;
+}

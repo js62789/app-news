@@ -1,6 +1,9 @@
-export * from './Navbar';
-export * from './ArticleList';
-export * from './ArticleListItem';
-export * from './ArticleCardItem';
-export * from './SourceList';
-export * from './SourceArticles';
+export { default as Application } from './Application';
+export { default as Navbar } from './Navbar';
+export { default as ArticleList } from './ArticleList';
+export { default as ArticleListItem } from './ArticleListItem';
+export { default as ArticleCardItem } from './ArticleCardItem';
+export { default as SourceList } from './SourceList';
+export { default as SourceArticles } from './SourceArticles';
+export { default as Article } from './Article';
+export { default as ArticleViewer } from './ArticleViewer';

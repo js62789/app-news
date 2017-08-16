@@ -1,22 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import fromNow from 'mininow';
+import { Link } from 'react-router-dom';
 import { ListGroup, Flex, Header, Text } from 'lib-react-components';
 
-export const ArticleListItem = ({ article }) => (
-  <ListGroup.Item key={article.guid} as="a" href={article.link} target="_blank" action>
+export const ArticleListItem = ({ source, article, showSummary }) => (
+  <ListGroup.Item key={article.guid} as={Link} to={`${source && `/sources/${source}`}/articles/${encodeURIComponent(article.guid)}`} action>
     <Flex alignItems="start" direction="column">
       <Header as="h2">{article.title}</Header>
       <Text small>
-        {article.date && <span>{fromNow(new Date(article.date))} </span>}
+        {article.pubdate && <span>{fromNow(new Date(article.pubdate))} </span>}
         <span>by {article.author}</span>
       </Text>
-      <Text>{(article.description || '').replace(/<\/?[^>]+(>|$)/g, '')}</Text>
+      {showSummary &&
+        <Text>{(article.description || '').replace(/<\/?[^>]+(>|$)/g, '')}</Text>
+      }
     </Flex>
   </ListGroup.Item>
 );
 
 ArticleListItem.propTypes = {
+  showSummary: PropTypes.bool,
+  source: PropTypes.string,
   article: PropTypes.shape({
     title: PropTypes.string.isRequired,
     description: PropTypes.string,
@@ -25,6 +30,8 @@ ArticleListItem.propTypes = {
 };
 
 ArticleListItem.defaultProps = {
+  showSummary: false,
+  source: null,
   article: {
     description: '',
     image: '',
