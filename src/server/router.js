@@ -105,7 +105,11 @@ router.get('/sources/:source/articles/:article_id', async (req, res, next) => {
     articlesByGuid[a.guid] = a;
   });
 
-  Object.assign(articlesByGuid[guid], articleBody.articles[0]);
+  if (articlesByGuid[guid]) {
+    Object.assign(articlesByGuid[guid], articleBody.articles[0]);
+  } else {
+    articlesByGuid[guid] = articleBody.articles[0];
+  }
 
   req.initialState = {
     ...req.initialState,
@@ -124,13 +128,6 @@ router.get('/sources/:source/articles/:article_id', async (req, res, next) => {
   };
 
   next();
-});
-
-// eslint-disable-next-line no-unused-vars
-router.use((err, req, res, next) => {
-  res.status(err.code).send({
-    error: err,
-  });
 });
 
 export default router;

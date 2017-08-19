@@ -13,7 +13,7 @@ babelWithoutCSSModules.plugins.pop();
 /* Entry */
 
 const entry = [
-  './client',
+  './src/client',
 ];
 
 if (!isProd) {
@@ -39,7 +39,14 @@ if (isProd) {
     loader: ExtractTextPlugin.extract({
       fallback: 'style-loader',
       use: [
-        'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+        {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            importLoaders: 1,
+            localIdentName: '[name]__[local]___[hash:base64:5]',
+          },
+        },
         'postcss-loader',
       ],
     }),
@@ -90,8 +97,6 @@ if (isProd) {
 }
 
 export default {
-
-  context: path.join(__dirname, 'src'),
 
   devtool: isProd ? 'cheap-source-map' : 'inline-source-map',
 

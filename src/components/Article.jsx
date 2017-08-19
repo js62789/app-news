@@ -38,7 +38,7 @@ class ArticleComponent extends React.Component {
     const { article } = this.props;
     return (
       <div>
-        <div className={styles.articleBanner} style={{ backgroundImage: `url(${article.image})` }} />
+        <div className={styles.articleBanner} style={{ backgroundImage: `url('${article.image}')` }} />
         <article className={styles.article}>
           <Header>{article.title}</Header>
           <Text muted>by {article.author}</Text>

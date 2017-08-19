@@ -10,6 +10,7 @@ import config from 'config';
 import { Application as RootComponent } from '../components';
 import reducer from '../reducers';
 import router from './router';
+import render from './render';
 
 const app = express();
 
@@ -24,7 +25,7 @@ if (process.env.NODE_ENV === 'development') {
   const webpackDevMiddleware = require('webpack-dev-middleware');
    // eslint-disable-next-line global-require, import/no-extraneous-dependencies
   const webpackHotMiddleware = require('webpack-hot-middleware');
-   // eslint-disable-next-line <global-require></global-require>
+   // eslint-disable-next-line global-require
   const webpackConfig = require('../../webpack.config.babel').default;
 
   const compiler = webpack(webpackConfig);
@@ -39,6 +40,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use(router);
 
 app.use(express.static('dist'));
+
+app.use(express.static('static'));
 
 app.get('*', (req, res) => {
   const createStoreWithMiddleware = applyMiddleware(apiMiddleware)(createStore);
@@ -61,28 +64,15 @@ app.get('*', (req, res) => {
 
   const finalState = store.getState();
 
-  res.send(`
-    <!doctype html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Universal React Application</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-        <link rel="stylesheet" href="/bundle.css">
-      </head>
-      <body>
-        <div id="root">${html}</div>
-        <script>
-          // WARNING: See the following for security issues around embedding JSON in HTML:
-          // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
-          window.__INITIAL_STATE__ = ${JSON.stringify(finalState).replace(/</g, '\\u003c')}
-        </script>
-       <script src="/bundle.js"></script>
-      </body>
-    </html>
-  `);
+  res.send(render(html, finalState));
+});
+
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.code || 500).send({
+    error: err,
+  });
 });
 
 export default app;
