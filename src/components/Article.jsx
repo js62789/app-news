@@ -8,6 +8,8 @@ import {
 } from '../actions';
 import styles from '../styles.css';
 
+const scrollToTop = () => { window.scrollTo(0, 0); };
+
 class ArticleComponent extends React.Component {
   static propTypes = {
     guid: PropTypes.string.isRequired,
@@ -26,6 +28,7 @@ class ArticleComponent extends React.Component {
     if (guid && articleContentMissing && !this.props.isFetchingArticles) {
       this.props.fetchArticle(guid);
     }
+    scrollToTop();
   }
   componentWillUpdate(nextProps) {
     const guidChanged = nextProps.guid !== this.props.guid;
@@ -33,6 +36,9 @@ class ArticleComponent extends React.Component {
     if (guidChanged && articleContentMissing && !this.props.isFetchingArticles) {
       this.props.fetchArticle(nextProps.guid);
     }
+  }
+  componentDidUpdate() {
+    scrollToTop();
   }
   render() {
     const { article } = this.props;
