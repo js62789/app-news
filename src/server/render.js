@@ -1,18 +1,6 @@
-const links = [];
+import config from 'config';
 
-if (process.env.NODE_ENV === 'production') {
-  links.push({
-    rel: 'stylesheet',
-    href: 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css',
-    integrity: 'sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ',
-    crossorigin: 'anonymous',
-  });
-} else {
-  links.push({
-    rel: 'stylesheet',
-    href: '/bootstrap.min.css',
-  });
-}
+const links = config.get('links');
 
 const buildElement = (tagName, attributes) => (
   `<${tagName} ${Object.entries(attributes).map(([k, v]) => `${k}="${v}"`).join(' ')} />`
