@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import fromNow from 'mininow';
 import { Link } from 'react-router-dom';
 import { ListGroup, Flex, Header, Text } from 'lib-react-components';
+import timeAgo from '../lib/timeAgo';
 
 export const ArticleListItem = ({ source, article, showSummary }) => (
   <ListGroup.Item key={article.guid} as={Link} to={`${source && `/sources/${source}`}/articles/${encodeURIComponent(article.guid)}`} action>
     <Flex alignItems="start" direction="column">
-      <Header as="h2">{article.title}</Header>
+      <Header as="h3">{article.title}</Header>
       <Text small>
-        {article.pubdate && <span>{fromNow(new Date(article.pubdate))} </span>}
+        {article.pubdate && <span>{timeAgo(new Date(article.date))} </span>}
         <span>by {article.author}</span>
       </Text>
       {showSummary &&
