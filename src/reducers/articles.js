@@ -55,7 +55,7 @@ export default (state = defaultState, action) => {
         },
         guidsBySource: {
           ...guidsBySource,
-          [source]: uniq((guidsBySource[source] || []).concat(articles.map(a => a.guid))),
+          [source.key]: uniq((guidsBySource[source] || []).concat(articles.map(a => a.guid))),
         },
       };
 
