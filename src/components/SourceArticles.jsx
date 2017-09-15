@@ -7,6 +7,7 @@ import { ArticleList } from './';
 import {
   fetchSource,
 } from '../actions';
+import styles from '../styles.css';
 
 class SourceArticlesComponent extends React.Component {
   static propTypes = {
@@ -29,7 +30,9 @@ class SourceArticlesComponent extends React.Component {
     const { source } = this.props;
     return (
       <div>
-        <Image src={source.logo} alt={source.name} height={80} />
+        <h2 className={styles.sourceHeader}>
+          <Image src={source.logo} alt={source.name} height={80} />
+        </h2>
         <ArticleList showSummary />
       </div>
     );

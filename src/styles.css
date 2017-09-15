@@ -35,3 +35,8 @@
 .article :global .image {
   display: none;
 }
+
+.sourceHeader {
+  text-align: center;
+  padding: 2rem 0;
+}
