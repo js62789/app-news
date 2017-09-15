@@ -5,7 +5,7 @@ import styles from '../styles.css';
 
 export const ArticleViewer = () => (
   <div>
-    <Grid.Row>
+    <Grid.Row className="no-gutters">
       <Grid.Column className={styles.sidebar} medium="3" large="4">
         <ArticleList source="nytimes" />
       </Grid.Column>
