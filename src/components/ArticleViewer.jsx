@@ -6,10 +6,10 @@ import styles from '../styles.css';
 export const ArticleViewer = () => (
   <div>
     <Grid.Row className="no-gutters">
-      <Grid.Column className={styles.sidebar} medium="3" large="4">
+      <Grid.Column className={styles.sidebar} medium="4">
         <ArticleList source="nytimes" />
       </Grid.Column>
-      <Grid.Column className={styles.mainContent} mediumOffset="3" largeOffset="4">
+      <Grid.Column className={styles.mainContent} mediumOffset="4">
         <Article />
       </Grid.Column>
     </Grid.Row>
