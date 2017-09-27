@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { ListGroup, Header } from 'lib-react-components';
+import { ListGroup, Header, Image } from 'lib-react-components';
 import {
   fetchSources,
 } from '../actions';
@@ -29,7 +29,8 @@ class SourceListComponent extends React.Component {
       <ListGroup as="div" loading={isFetchingSources}>
         {sources.map(source => (
           <ListGroup.Item key={source.key} as={Link} to={`/sources/${source.key}/articles`} action>
-            <Header>{source.name}</Header>
+            <Image className="rounded-circle mr-3 hidden-sm-down" src={`/publishers/${source.icon}`} height={80} width={80} alt={source.name} bordered />
+            <Header className="d-inline-block align-middle">{source.name}</Header>
           </ListGroup.Item>
         ))}
       </ListGroup>
