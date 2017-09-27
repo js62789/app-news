@@ -30,7 +30,7 @@ router.get('/sources', async (req, res, next) => {
 router.get('/sources/:source/articles', async (req, res, next) => {
   const sourceKey = req.params.source;
   const sourcesResponse = await fetch(`${API}/sources/${sourceKey}`);
-  const articlesResponse = await fetch(`${API}/sources/${sourceKey}/articles`);
+  const articlesResponse = await fetch(`${API}/sources/${sourceKey}/articles?limit=10`);
   const sourcesBody = await sourcesResponse.json();
   const articlesBody = await articlesResponse.json();
   const sourcesByKey = {};
@@ -90,7 +90,7 @@ router.get('/sources/:source/articles/:article_id', async (req, res, next) => {
   const sourceKey = req.params.source;
   const articleResponse = await fetch(`${API}/articles/${encodeURIComponent(guid)}`);
   const sourcesResponse = await fetch(`${API}/sources/${sourceKey}`);
-  const articlesResponse = await fetch(`${API}/sources/${sourceKey}/articles`);
+  const articlesResponse = await fetch(`${API}/sources/${sourceKey}/articles?limit=10`);
   const articleBody = await articleResponse.json();
   const sourcesBody = await sourcesResponse.json();
   const articlesBody = await articlesResponse.json();
